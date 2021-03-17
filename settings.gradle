@@ -13,4 +13,4 @@ gradle.startParameter.excludedTaskNames << "lintVitalProdRelease"
 
 include 'wallet'
 include 'integration-android'
-include 'sample-integration-android'
+//include 'sample-integration-android'

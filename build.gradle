@@ -18,5 +18,18 @@ allprojects {
     repositories {
         mavenCentral()
         google()
+        maven { url 'https://jitpack.io' }
     }
+}
+
+// https://github.com/flutter/flutter/issues/27254
+subprojects {
+    project.configurations.all {
+	resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'androidx.arch.core' &&
+	       !details.requested.name.contains('androidx')) {
+		details.useVersion "2.0.1"
+            }
+	}
+    }    
 }

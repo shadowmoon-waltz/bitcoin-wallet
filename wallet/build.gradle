@@ -39,7 +39,23 @@ ext {
     archivesBaseName = 'bitcoin-wallet'
 }
 
+boolean signConfigExists = project.hasProperty("keystoreFile") &&
+                           project.hasProperty("keystorePassword") &&
+                           project.hasProperty("keystoreAlias") &&
+                           project.hasProperty("keystoreAliasPassword")
+
 android {
+  if (signConfigExists) {
+    signingConfigs {
+      release {
+        storeFile file(project.property("keystoreFile"))
+        storePassword project.property("keystorePassword")
+        keyAlias project.property("keystoreAlias")
+        keyPassword project.property("keystoreAliasPassword")
+      }
+    }
+  }
+
     compileSdkVersion 'android-29'
     buildToolsVersion '29.0.3'
 
@@ -55,6 +71,9 @@ android {
             minifyEnabled true
             shrinkResources false
             proguardFile 'proguard.cfg'
+            if (signConfigExists) {
+                signingConfig signingConfigs.release
+            }
         }
         debug {
             debuggable true
@@ -69,7 +88,7 @@ android {
         }
         prod {
             dimension 'flavor'
-            applicationIdSuffix '.wallet'
+            applicationIdSuffix '.wallet.sw'
         }
     }
 

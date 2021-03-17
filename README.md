@@ -18,7 +18,8 @@ and pull requests, but that's not guaranteed (I probably will if they're not too
 Main gradle build command: assembleProdRelease
 
 Small changes: build system fixes due to my version of Gradle or some other build environment reason. Not building sample
-Android 3rd party app integration example.
+Android 3rd party app integration example. uses my usual apk signing code. changes app name to avoid confusion with non-fork
+bitcoin wallet.
 
 The send coin button at the bottom of the main transaction screen takes up more space, because I use that more, and the scan a code
 to send button that was in the center of the bar was removed, becasue I don't use that much (you can still choose the camera option
