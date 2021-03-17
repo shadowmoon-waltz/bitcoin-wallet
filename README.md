@@ -22,8 +22,8 @@ Android 3rd party app integration example. uses my usual apk signing code. chang
 bitcoin wallet.
 
 The send coin button at the bottom of the main transaction screen takes up more space, because I use that more, and the scan a code
-to send button that was in the center of the bar was removed, becasue I don't use that much (you can still choose the camera option
-on the send coins screen).
+to send button that was in the center of the bar was removed, because I don't use that much (you can still choose the camera option
+on the send coins screen). Shortened request coins to request, since I don't use it that much and it takes up less space.
 
 The original bitcoin wallet's crash detection and suggestion to report, as well as the report an issue button on each transaction,
 are removed (in line with the earlier warning on lack of support). Disables update check too.

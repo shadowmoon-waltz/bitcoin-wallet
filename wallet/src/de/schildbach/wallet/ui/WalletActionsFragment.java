@@ -51,9 +51,9 @@ public final class WalletActionsFragment extends Fragment {
         final View sendButton = view.findViewById(R.id.wallet_actions_send);
         sendButton.setOnClickListener(v -> activity.handleSendCoins());
 
-        final View sendQrButton = view.findViewById(R.id.wallet_actions_send_qr);
-        sendQrButton.setOnClickListener(v -> activity.handleScan(v));
-        CheatSheet.setup(sendQrButton);
+        //final View sendQrButton = view.findViewById(R.id.wallet_actions_send_qr);
+        //sendQrButton.setOnClickListener(v -> activity.handleScan(v));
+        //CheatSheet.setup(sendQrButton);
 
         return view;
     }
