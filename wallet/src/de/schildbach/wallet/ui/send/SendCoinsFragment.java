@@ -113,6 +113,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.bitcoinj.utils.ExchangeRate;
+import org.bitcoinj.utils.Fiat;
+import de.schildbach.wallet.util.GenericUtils;
+
 /**
  * @author Andreas Schildbach
  */
@@ -143,6 +147,7 @@ public final class SendCoinsFragment extends Fragment {
     private CheckBox directPaymentEnableView;
 
     private TextView hintView;
+    private TextView hintView2;
     private TextView directPaymentMessageView;
     private ViewGroup sentTransactionView;
     private TransactionsAdapter.TransactionViewHolder sentTransactionViewHolder;
@@ -421,6 +426,7 @@ public final class SendCoinsFragment extends Fragment {
         });
 
         hintView = view.findViewById(R.id.send_coins_hint);
+        hintView2 = view.findViewById(R.id.send_coins_hint2);
 
         directPaymentMessageView = view.findViewById(R.id.send_coins_direct_payment_message);
 
@@ -984,6 +990,7 @@ public final class SendCoinsFragment extends Fragment {
             directPaymentEnableView.setEnabled(viewModel.state == SendCoinsViewModel.State.INPUT);
 
             hintView.setVisibility(View.GONE);
+            hintView2.setVisibility(View.GONE);
             if (viewModel.state == SendCoinsViewModel.State.INPUT) {
                 if (blockchainState != null && blockchainState.replaying) {
                     hintView.setTextColor(activity.getColor(R.color.fg_error));
@@ -1011,17 +1018,43 @@ public final class SendCoinsFragment extends Fragment {
                     final int hintResId;
                     final int colorResId;
                     if (viewModel.feeCategory == FeeCategory.ECONOMIC) {
-                        hintResId = R.string.send_coins_fragment_hint_fee_economic;
+                        hintResId = R.string.send_coins_fragment_hint_fee_economic2;
                         colorResId = R.color.fg_less_significant;
                     } else if (viewModel.feeCategory == FeeCategory.PRIORITY) {
-                        hintResId = R.string.send_coins_fragment_hint_fee_priority;
+                        hintResId = R.string.send_coins_fragment_hint_fee_priority2;
                         colorResId = R.color.fg_less_significant;
                     } else {
-                        hintResId = R.string.send_coins_fragment_hint_fee;
+                        hintResId = R.string.send_coins_fragment_hint_fee2;
                         colorResId = R.color.fg_insignificant;
                     }
-                    hintView.setTextColor(activity.getColor(colorResId));
-                    hintView.setText(getString(hintResId, btcFormat.format(viewModel.dryrunTransaction.getFee())));
+                    //hintView.setTextColor(activity.getColor(colorResId));
+                    hintView.setTextColor(activity.getColor(R.color.fg_significant));
+                    
+                    final ExchangeRate exchangeRate = amountCalculatorLink.getExchangeRate();
+                    final Fiat localAmount = exchangeRate.coinToFiat(viewModel.dryrunTransaction.getFee());
+
+                    final long vsize = viewModel.dryrunTransaction.getFee().multiply(1000).divide(fees.get(viewModel.feeCategory));
+                    final Coin dynspvb = fees.get(viewModel.feeCategory).divide(1000);
+                    final Fiat fiatDynspvb = exchangeRate.coinToFiat(dynspvb);
+                    final Coin calcspvb = viewModel.dryrunTransaction.getFee().divide(vsize);
+
+                    hintView.setText(getString(hintResId, viewModel.dryrunTransaction.getFee().getValue(), btcFormat.format(viewModel.dryrunTransaction.getFee()),
+                        GenericUtils.currencySymbol(localAmount.getCurrencyCode()), Constants.LOCAL_FORMAT.format(localAmount)));
+
+                    hintView2.setVisibility(View.VISIBLE);
+                    if (dynspvb.getValue() != calcspvb.getValue()) {
+                        final Fiat fiatCalcspvb = exchangeRate.coinToFiat(calcspvb);
+                        hintView2.setText(
+                            "Message Size: " + vsize + " vB\n" +
+                            "Sats / vB: dyn " + dynspvb.getValue() + " sats (" + GenericUtils.currencySymbol(localAmount.getCurrencyCode()) + Constants.LOCAL_FORMAT.format(fiatDynspvb) + "), calc " +
+                            + calcspvb.getValue() + " sats (" + GenericUtils.currencySymbol(localAmount.getCurrencyCode()) + Constants.LOCAL_FORMAT.format(fiatCalcspvb) + ")"
+                        );
+                    } else {
+                        hintView2.setText(
+                            "Message Size: " + vsize + " vB\n" +
+                            "Sats / vB: " + dynspvb.getValue() + " sats (" + GenericUtils.currencySymbol(localAmount.getCurrencyCode()) + Constants.LOCAL_FORMAT.format(fiatDynspvb) + ")"
+                        );
+                    }
                 } else if (viewModel.paymentIntent.mayEditAddress() && viewModel.validatedAddress != null
                         && wallet != null && wallet.isAddressMine(viewModel.validatedAddress.address)) {
                     hintView.setTextColor(activity.getColor(R.color.fg_insignificant));

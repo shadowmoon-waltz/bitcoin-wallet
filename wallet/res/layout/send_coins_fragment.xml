@@ -150,6 +150,13 @@
             android:layout_weight="1" />
 
         <TextView
+            android:id="@+id/send_coins_hint2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/list_entry_padding_vertical"
+            android:textSize="@dimen/font_size_small" />
+
+        <TextView
             android:id="@+id/send_coins_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
