@@ -164,6 +164,8 @@ public final class SendCoinsFragment extends Fragment {
     private AbstractWalletActivityViewModel walletActivityViewModel;
     private SendCoinsViewModel viewModel;
 
+    private Menu menu = null;
+
     private static final Logger log = LoggerFactory.getLogger(SendCoinsFragment.class);
 
     private final class ReceivingAddressListener
@@ -322,6 +324,7 @@ public final class SendCoinsFragment extends Fragment {
             });
         }
         viewModel.dynamicFees.observe(this, dynamicFees -> {
+            updateFeesInMenu(dynamicFees);
             updateView();
             handler.post(dryrunRunnable);
         });
@@ -380,6 +383,28 @@ public final class SendCoinsFragment extends Fragment {
                 updateStateFrom(PaymentIntent.blank());
             }
         }
+    }
+
+    private void menuFeeString(final ExchangeRate exchangeRate, int menuId, int stringId, final Coin fee) {
+        final long fee2 = fee.getValue() / 1000;
+        if (exchangeRate == null) {
+            menu.findItem(menuId).setTitle(getString(stringId) + " (" + fee2 + " sats/vB)");
+        } else {
+            final Fiat localAmount = exchangeRate.coinToFiat(Coin.SATOSHI.multiply(fee2*140));
+            menu.findItem(menuId).setTitle(getString(stringId) + " (" + fee2 + " sats/vB) (~" +
+                GenericUtils.currencySymbol(localAmount.getCurrencyCode()) + Constants.LOCAL_FORMAT.format(localAmount) + ")");
+        }
+    }
+
+    public void updateFeesInMenu(final Map<FeeCategory, Coin> fees) {
+        if (fees == null || menu == null) {
+            return;
+        }
+
+        final ExchangeRate exchangeRate = amountCalculatorLink.getExchangeRate();
+        menuFeeString(exchangeRate, R.id.send_coins_options_fee_category_economic, R.string.send_coins_options_fee_category_economic, fees.get(FeeCategory.ECONOMIC));
+        menuFeeString(exchangeRate, R.id.send_coins_options_fee_category_normal, R.string.send_coins_options_fee_category_normal, fees.get(FeeCategory.NORMAL));
+        menuFeeString(exchangeRate, R.id.send_coins_options_fee_category_priority, R.string.send_coins_options_fee_category_priority, fees.get(FeeCategory.PRIORITY));
     }
 
     @Override
@@ -564,6 +589,12 @@ public final class SendCoinsFragment extends Fragment {
             menu.findItem(R.id.send_coins_options_fee_category_normal).setChecked(true);
         else if (viewModel.feeCategory == FeeCategory.PRIORITY)
             menu.findItem(R.id.send_coins_options_fee_category_priority).setChecked(true);
+
+        this.menu = menu;
+
+        if (viewModel.dynamicFees != null) {
+            updateFeesInMenu(viewModel.dynamicFees.getValue());
+        }
 
         super.onPrepareOptionsMenu(menu);
     }
