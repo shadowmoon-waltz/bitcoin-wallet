@@ -19,7 +19,8 @@ Main gradle build command: assembleProdRelease
 
 Small changes: build system fixes due to my version of Gradle or some other build environment reason. Not building sample
 Android 3rd party app integration example. uses my usual apk signing code. changes app name to avoid confusion with non-fork
-bitcoin wallet.
+bitcoin wallet. May be a bug or not, but dynamic fee data was being saved to a filename based on the static asset filename,
+not the constant value defined for the dynamic fee data filename, and was fixed.
 
 The send coin button at the bottom of the main transaction screen takes up more space, because I use that more, and the scan a code
 to send button that was in the center of the bar was removed, because I don't use that much (you can still choose the camera option

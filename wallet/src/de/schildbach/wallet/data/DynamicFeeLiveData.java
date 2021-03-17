@@ -72,8 +72,8 @@ public class DynamicFeeLiveData extends LiveData<Map<FeeCategory, Coin>> {
                 + (versionNameSplit >= 0 ? packageInfo.versionName.substring(versionNameSplit) : ""));
         this.userAgent = WalletApplication.httpUserAgent(packageInfo.versionName);
         this.assets = application.getAssets();
-        this.dynamicFeesFile = new File(application.getFilesDir(), Constants.Files.FEES_ASSET);
-        this.tempFile = new File(application.getCacheDir(), Constants.Files.FEES_ASSET + ".temp");
+        this.dynamicFeesFile = new File(application.getFilesDir(), Constants.Files.FEES_FILENAME);
+        this.tempFile = new File(application.getCacheDir(), Constants.Files.FEES_FILENAME + ".temp");
     }
 
     @Override
