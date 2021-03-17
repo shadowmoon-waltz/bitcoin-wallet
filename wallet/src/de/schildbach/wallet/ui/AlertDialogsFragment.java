@@ -139,6 +139,9 @@ public class AlertDialogsFragment extends Fragment {
     }
 
     private void process() {
+        if (Constants.VERSION_URL == null) {
+            return;
+        }
         final PackageInfo packageInfo = application.packageInfo();
         final HttpUrl.Builder url = Constants.VERSION_URL.newBuilder();
         url.addEncodedQueryParameter("package", packageInfo.packageName);

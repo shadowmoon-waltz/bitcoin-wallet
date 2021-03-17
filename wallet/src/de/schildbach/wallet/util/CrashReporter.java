@@ -45,7 +45,7 @@ public class CrashReporter {
     private static File backgroundTracesFile;
     private static File crashTraceFile;
 
-    private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
+    //private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
     private static final Logger log = LoggerFactory.getLogger(CrashReporter.class);
 
@@ -57,7 +57,7 @@ public class CrashReporter {
     }
 
     public static boolean collectSavedBackgroundTraces(final File file) {
-        return backgroundTracesFile.renameTo(file);
+        return false; // backgroundTracesFile.renameTo(file);
     }
 
     public static boolean hasSavedCrashTrace() {
@@ -65,6 +65,7 @@ public class CrashReporter {
     }
 
     public static void appendSavedCrashTrace(final Appendable report) throws IOException {
+        /*
         if (crashTraceFile.exists()) {
             try (final BufferedReader reader = new BufferedReader(
                     new InputStreamReader(new FileInputStream(crashTraceFile), StandardCharsets.UTF_8))) {
@@ -73,12 +74,14 @@ public class CrashReporter {
                 deleteSaveCrashTrace();
             }
         }
+        */
     }
 
     public static boolean deleteSaveCrashTrace() {
         return crashTraceFile.delete();
     }
 
+    /*
     private static void copy(final BufferedReader in, final Appendable out) throws IOException {
         while (true) {
             final String line = in.readLine();
@@ -88,8 +91,10 @@ public class CrashReporter {
             out.append(line).append('\n');
         }
     }
+    */
 
     public static void saveBackgroundTrace(final Throwable throwable, final PackageInfo packageInfo) {
+        /*
         synchronized (backgroundTracesFile) {
             try (final PrintWriter writer = new PrintWriter(
                     new OutputStreamWriter(new FileOutputStream(backgroundTracesFile, true), StandardCharsets.UTF_8))) {
@@ -101,9 +106,11 @@ public class CrashReporter {
                 log.error("problem writing background trace", x);
             }
         }
+        */
     }
 
     private static void appendTrace(final PrintWriter writer, final Throwable throwable) {
+        /*
         throwable.printStackTrace(writer);
         // If the exception was thrown in a background thread inside
         // AsyncTask, then the actual exception can be found with getCause
@@ -113,6 +120,7 @@ public class CrashReporter {
             cause.printStackTrace(writer);
             cause = cause.getCause();
         }
+        */
     }
 
     private static class ExceptionHandler implements Thread.UncaughtExceptionHandler {
@@ -130,8 +138,9 @@ public class CrashReporter {
         }
 
         private void saveCrashTrace(final Throwable throwable) {
+            /*
             // Don't bother the user and us with these Android system bugs; we cannot do anything about it.
-            if (/* throwable instanceof android.app.RemoteServiceException && */
+            if (/ * throwable instanceof android.app.RemoteServiceException && * /
                     throwable.getMessage().contains("Context.startForegroundService() did not then call Service.startForeground()"))
                 return;
 
@@ -144,6 +153,7 @@ public class CrashReporter {
             } catch (final IOException x) {
                 log.warn("problem saving crash trace", x);
             }
+            */
         }
     }
 }

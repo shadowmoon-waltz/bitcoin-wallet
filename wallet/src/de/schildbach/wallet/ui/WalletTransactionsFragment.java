@@ -305,9 +305,9 @@ public class WalletTransactionsFragment extends Fragment implements Transactions
         } else if (itemId == R.id.wallet_transactions_context_raise_fee) {
             RaiseFeeDialogFragment.show(fragmentManager, transactionId);
             return true;
-        } else if (itemId == R.id.wallet_transactions_context_report_issue) {
-            viewModel.showReportIssueDialog.setValue(new Event<>(transactionId));
-            return true;
+        //} else if (itemId == R.id.wallet_transactions_context_report_issue) {
+        //    viewModel.showReportIssueDialog.setValue(new Event<>(transactionId));
+        //    return true;
         } else if (itemId == R.id.wallet_transactions_context_browse) {
             final Uri blockExplorerUri = config.getBlockExplorer();
             log.info("Viewing transaction {} on {}", transactionId, blockExplorerUri);

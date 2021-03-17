@@ -181,8 +181,8 @@ public final class WalletActivity extends AbstractWalletActivity {
         if (exchangeRatesFragment != null)
             exchangeRatesFragment.setVisibility(Constants.ENABLE_EXCHANGE_RATES ? View.VISIBLE : View.GONE);
 
-        if (savedInstanceState == null && CrashReporter.hasSavedCrashTrace())
-            viewModel.showReportCrashDialog.setValue(Event.simple());
+        //if (savedInstanceState == null && CrashReporter.hasSavedCrashTrace())
+        //    viewModel.showReportCrashDialog.setValue(Event.simple());
 
         config.touchLastUsed();
 
@@ -452,9 +452,9 @@ public final class WalletActivity extends AbstractWalletActivity {
         } else if (itemId == R.id.wallet_options_technical_notes) {
             viewModel.showHelpDialog.setValue(new Event<>(R.string.help_technical_notes));
             return true;
-        } else if (itemId == R.id.wallet_options_report_issue) {
-            viewModel.showReportIssueDialog.setValue(Event.simple());
-            return true;
+        //} else if (itemId == R.id.wallet_options_report_issue) {
+        //    viewModel.showReportIssueDialog.setValue(Event.simple());
+        //    return true;
         } else if (itemId == R.id.wallet_options_help) {
             viewModel.showHelpDialog.setValue(new Event<>(R.string.help_wallet));
             return true;

@@ -26,8 +26,9 @@ to send button that was in the center of the bar was removed, becasue I don't us
 on the send coins screen).
 
 The original bitcoin wallet's crash detection and suggestion to report, as well as the report an issue button on each transaction,
-are removed (in line with the earlier warning on lack of support). 
-Using a fork I created of the bitcoinj library that calculate fees more accurately based on the virtual size rather than the
+are removed (in line with the earlier warning on lack of support). Disables update check too.
+
+Uses a fork I created of the bitcoinj library that calculate fees more accurately based on the virtual size rather than the
 actual message size (meaning fees will be the same or lower depending on whether segwit is being used). At least I believe that
 to be the case, unless I made a mistake. I forked the original repository and cherry picked changes in the master branch, as those
 changes don't seem to be in the latest release tag, which is what the non-forked Bitcoin Wallet compiled against. In addition, the
