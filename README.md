@@ -1,7 +1,5 @@
 # BITCOIN WALLET SW
 
-CHANGES IN UPCOMING COMMITS
-
 Fork (with minor to moderate changes) of [project of same name](https://github.com/bitcoin-wallet/bitcoin-wallet).
 Changes will be described in this section; other sections are from original readme and may not reflect fork changes.
 
@@ -48,8 +46,11 @@ Added ability to preview the fee amount in the fee category menu options (they l
 a few seconds before they'll show up); it includes the satoshis per virtual byte cost and the approximate local currency amount based on
 the average virtual byte transaction size if using segwit (140 virtual bytes).
 
-tl;dr changes: small build changes, small ui changes, mempool.space fee categories, enhanced fee preview alongside fee categories and at
-bottom of send coins screen
+Changed default send coins screen default fee category from normal to ms low, sweep wallet feature fee category from normal to ms low, and
+raise fee feature fee category from priority to ms high.
+
+tl;dr changes: small build changes, small ui changes, reduce fee overpaying in some common cases, mempool.space fee categories, enhanced fee
+preview alongside fee categories, and changes to default fee category (usually reduces fees)
 
 Using release signing based on "gradle.properties" in your gradle config directory (which usually defaults to "~/.gradle").
 Add the following lines to that file `

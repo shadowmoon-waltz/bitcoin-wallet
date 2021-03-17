@@ -22,9 +22,29 @@ package de.schildbach.wallet.ui.send;
  */
 public enum FeeCategory {
     /**
+     * mempool.space's minimum fee
+     */
+    MS_MIN,
+
+    /**
      * We don't care when it confirms, but it should confirm at some time. Can be days or weeks.
      */
     ECONOMIC,
+
+    /**
+     * mempool.space's low priority (should confirm within an hour)
+     */
+    MS_LOW,
+
+    /**
+     * mempool.space's medium priority (should confirm within 30 minutes)
+     */
+    MS_MEDIUM,
+
+    /**
+     * mempool.space's high priority
+     */
+    MS_HIGH,
 
     /**
      * Under normal network conditions, confirms within the next 15 minutes. Can take longer, but this should

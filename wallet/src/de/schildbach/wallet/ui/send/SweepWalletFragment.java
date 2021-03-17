@@ -529,7 +529,8 @@ public class SweepWalletFragment extends Fragment {
         final Wallet walletToSweep = viewModel.walletToSweep.getValue();
         final Map<FeeCategory, Coin> fees = viewModel.getDynamicFees().getValue();
         final SendRequest sendRequest = SendRequest.emptyWallet(wallet.freshReceiveAddress());
-        sendRequest.feePerKb = fees.get(FeeCategory.NORMAL);
+        // consider allowing user to select a fee
+        sendRequest.feePerKb = fees.get(FeeCategory.MS_LOW);
 
         new SendCoinsOfflineTask(walletToSweep, backgroundHandler) {
             @Override

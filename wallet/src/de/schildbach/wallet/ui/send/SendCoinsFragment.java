@@ -402,7 +402,11 @@ public final class SendCoinsFragment extends Fragment {
         }
 
         final ExchangeRate exchangeRate = amountCalculatorLink.getExchangeRate();
+        menuFeeString(exchangeRate, R.id.send_coins_options_fee_category_ms_min, R.string.send_coins_options_fee_category_ms_min, fees.get(FeeCategory.MS_MIN));
         menuFeeString(exchangeRate, R.id.send_coins_options_fee_category_economic, R.string.send_coins_options_fee_category_economic, fees.get(FeeCategory.ECONOMIC));
+        menuFeeString(exchangeRate, R.id.send_coins_options_fee_category_ms_low, R.string.send_coins_options_fee_category_ms_low, fees.get(FeeCategory.MS_LOW));
+        menuFeeString(exchangeRate, R.id.send_coins_options_fee_category_ms_medium, R.string.send_coins_options_fee_category_ms_medium, fees.get(FeeCategory.MS_MEDIUM));
+        menuFeeString(exchangeRate, R.id.send_coins_options_fee_category_ms_high, R.string.send_coins_options_fee_category_ms_high, fees.get(FeeCategory.MS_HIGH));
         menuFeeString(exchangeRate, R.id.send_coins_options_fee_category_normal, R.string.send_coins_options_fee_category_normal, fees.get(FeeCategory.NORMAL));
         menuFeeString(exchangeRate, R.id.send_coins_options_fee_category_priority, R.string.send_coins_options_fee_category_priority, fees.get(FeeCategory.PRIORITY));
     }
@@ -583,8 +587,16 @@ public final class SendCoinsFragment extends Fragment {
 
         final MenuItem feeCategoryAction = menu.findItem(R.id.send_coins_options_fee_category);
         feeCategoryAction.setEnabled(viewModel.state == SendCoinsViewModel.State.INPUT);
-        if (viewModel.feeCategory == FeeCategory.ECONOMIC)
+        if (viewModel.feeCategory == FeeCategory.MS_MIN)
+            menu.findItem(R.id.send_coins_options_fee_category_ms_min).setChecked(true);
+        else if (viewModel.feeCategory == FeeCategory.ECONOMIC)
             menu.findItem(R.id.send_coins_options_fee_category_economic).setChecked(true);
+        else if (viewModel.feeCategory == FeeCategory.MS_LOW)
+            menu.findItem(R.id.send_coins_options_fee_category_ms_low).setChecked(true);
+        else if (viewModel.feeCategory == FeeCategory.MS_MEDIUM)
+            menu.findItem(R.id.send_coins_options_fee_category_ms_medium).setChecked(true);
+        else if (viewModel.feeCategory == FeeCategory.MS_HIGH)
+            menu.findItem(R.id.send_coins_options_fee_category_ms_high).setChecked(true);
         else if (viewModel.feeCategory == FeeCategory.NORMAL)
             menu.findItem(R.id.send_coins_options_fee_category_normal).setChecked(true);
         else if (viewModel.feeCategory == FeeCategory.PRIORITY)
@@ -605,8 +617,20 @@ public final class SendCoinsFragment extends Fragment {
         if (itemId == R.id.send_coins_options_scan) {
             ScanActivity.startForResult(this, activity, REQUEST_CODE_SCAN);
             return true;
+        } else if (itemId == R.id.send_coins_options_fee_category_ms_min) {
+            handleFeeCategory(FeeCategory.MS_MIN);
+            return true;
         } else if (itemId == R.id.send_coins_options_fee_category_economic) {
             handleFeeCategory(FeeCategory.ECONOMIC);
+            return true;
+        } else if (itemId == R.id.send_coins_options_fee_category_ms_low) {
+            handleFeeCategory(FeeCategory.MS_LOW);
+            return true;
+        } else if (itemId == R.id.send_coins_options_fee_category_ms_medium) {
+            handleFeeCategory(FeeCategory.MS_MEDIUM);
+            return true;
+        } else if (itemId == R.id.send_coins_options_fee_category_ms_high) {
+            handleFeeCategory(FeeCategory.MS_HIGH);
             return true;
         } else if (itemId == R.id.send_coins_options_fee_category_normal) {
             handleFeeCategory(FeeCategory.NORMAL);
@@ -1048,11 +1072,23 @@ public final class SendCoinsFragment extends Fragment {
                     hintView.setVisibility(View.VISIBLE);
                     final int hintResId;
                     final int colorResId;
-                    if (viewModel.feeCategory == FeeCategory.ECONOMIC) {
+                    if (viewModel.feeCategory == FeeCategory.MS_MIN) {
+                        hintResId = R.string.send_coins_fragment_hint_fee_ms_min2;
+                        colorResId = R.color.fg_less_significant;
+                    } else if (viewModel.feeCategory == FeeCategory.ECONOMIC) {
                         hintResId = R.string.send_coins_fragment_hint_fee_economic2;
                         colorResId = R.color.fg_less_significant;
                     } else if (viewModel.feeCategory == FeeCategory.PRIORITY) {
                         hintResId = R.string.send_coins_fragment_hint_fee_priority2;
+                        colorResId = R.color.fg_less_significant;
+                    } else if (viewModel.feeCategory == FeeCategory.MS_LOW) {
+                        hintResId = R.string.send_coins_fragment_hint_fee_ms_low2;
+                        colorResId = R.color.fg_insignificant;
+                    } else if (viewModel.feeCategory == FeeCategory.MS_MEDIUM) {
+                        hintResId = R.string.send_coins_fragment_hint_fee_ms_medium2;
+                        colorResId = R.color.fg_insignificant;
+                    } else if (viewModel.feeCategory == FeeCategory.MS_HIGH) {
+                        hintResId = R.string.send_coins_fragment_hint_fee_ms_high2;
                         colorResId = R.color.fg_less_significant;
                     } else {
                         hintResId = R.string.send_coins_fragment_hint_fee2;

@@ -136,7 +136,8 @@ public class RaiseFeeDialogFragment extends DialogFragment {
                 // We basically have to pay fee for two transactions:
                 // The transaction to raise the fee of and the CPFP transaction we're about to create.
                 final int size = transaction.getMessageSize() + 192;
-                feeRaise = dynamicFees.get(FeeCategory.PRIORITY).multiply(size).divide(1000);
+                // consider allowing user to select new fee
+                feeRaise = dynamicFees.get(FeeCategory.MS_HIGH).multiply(size).divide(1000);
                 updateView();
             });
         });

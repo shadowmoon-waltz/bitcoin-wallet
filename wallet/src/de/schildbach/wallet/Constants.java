@@ -102,6 +102,8 @@ public final class Constants {
         /** Filename of the dynamic fees file. */
         public static final String FEES_FILENAME = "fees" + FILENAME_NETWORK_SUFFIX + ".txt";
 
+        public static final String FEES_2_FILENAME = "fees" + FILENAME_NETWORK_SUFFIX + ".ms.txt";
+
         /** Name of the asset containing Electrum servers. */
         public static final String ELECTRUM_SERVERS_ASSET = "electrum-servers.txt";
     }
@@ -112,6 +114,8 @@ public final class Constants {
 
     /** URL to fetch dynamic fees from. */
     public static final HttpUrl DYNAMIC_FEES_URL = HttpUrl.parse("https://wallet.schildbach.de/fees");
+
+    public static final HttpUrl DYNAMIC_FEES_2_URL = HttpUrl.parse("https://mempool.space/api/v1/fees/recommended");
 
     /** MIME type used for transmitting single transactions. */
     public static final String MIMETYPE_TRANSACTION = "application/x-btctx";

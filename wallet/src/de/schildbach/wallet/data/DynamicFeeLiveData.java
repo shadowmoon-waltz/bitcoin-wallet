@@ -53,6 +53,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import mjson.Json;
+import java.io.FileWriter;
+
 /**
  * @author Andreas Schildbach
  */
@@ -61,7 +64,9 @@ public class DynamicFeeLiveData extends LiveData<Map<FeeCategory, Coin>> {
     private final String userAgent;
     private final AssetManager assets;
     private final File dynamicFeesFile;
+    private final File dynamicFees2File;
     private final File tempFile;
+    private final File tempFile2;
 
     private static final Logger log = LoggerFactory.getLogger(DynamicFeeLiveData.class);
 
@@ -73,7 +78,9 @@ public class DynamicFeeLiveData extends LiveData<Map<FeeCategory, Coin>> {
         this.userAgent = WalletApplication.httpUserAgent(packageInfo.versionName);
         this.assets = application.getAssets();
         this.dynamicFeesFile = new File(application.getFilesDir(), Constants.Files.FEES_FILENAME);
+        this.dynamicFees2File = new File(application.getFilesDir(), Constants.Files.FEES_2_FILENAME);
         this.tempFile = new File(application.getCacheDir(), Constants.Files.FEES_FILENAME + ".temp");
+        this.tempFile2 = new File(application.getCacheDir(), Constants.Files.FEES_2_FILENAME + ".temp");
     }
 
     @Override
@@ -86,49 +93,64 @@ public class DynamicFeeLiveData extends LiveData<Map<FeeCategory, Coin>> {
 
     private Map<FeeCategory, Coin> loadInBackground() {
         try {
-            final Map<FeeCategory, Coin> staticFees = parseFees(assets.open(Constants.Files.FEES_ASSET));
+            Map<FeeCategory, Coin> staticFees = new HashMap<>();
+            parseFees(staticFees, assets.open(Constants.Files.FEES_ASSET));
             fetchDynamicFees(dynamicFeesUrl, tempFile, dynamicFeesFile, userAgent);
-            if (!dynamicFeesFile.exists())
-                return staticFees;
+            fetchDynamicFees2(Constants.DYNAMIC_FEES_2_URL, tempFile2, dynamicFees2File, userAgent);
 
             // Check dynamic fees for sanity, based on the hardcoded fees.
             // The bounds are as follows (h is the respective hardcoded fee):
             // ECONOMIC: h/8 to h*8
             // NORMAL: h/8 to h*8
             // PRIORITY: h/8 to h*8
-            final Map<FeeCategory, Coin> dynamicFees = parseFees(new FileInputStream(dynamicFeesFile));
-            for (final FeeCategory category : FeeCategory.values()) {
-                final Coin staticFee = staticFees.get(category);
-                final Coin dynamicFee = dynamicFees.get(category);
-                if (dynamicFee == null) {
-                    dynamicFees.put(category, staticFee);
-                    log.warn("Dynamic fee category missing, using static: category {}, {}/kB", category,
-                            staticFee.toFriendlyString());
-                    continue;
-                }
-                final Coin upperBound = staticFee.shiftLeft(3);
-                if (dynamicFee.isGreaterThan(upperBound)) {
-                    dynamicFees.put(category, upperBound);
-                    log.warn("Down-adjusting dynamic fee: category {} from {}/kB to {}/kB", category,
-                            dynamicFee.toFriendlyString(), upperBound.toFriendlyString());
-                    continue;
-                }
-                final Coin lowerBound = staticFee.shiftRight(3);
-                if (dynamicFee.isLessThan(lowerBound)) {
-                    dynamicFees.put(category, lowerBound);
-                    log.warn("Up-adjusting dynamic fee: category {} from {}/kB to {}/kB", category,
-                            dynamicFee.toFriendlyString(), lowerBound.toFriendlyString());
-                }
+            Map<FeeCategory, Coin> dynamicFees = new HashMap<>();
+            if (dynamicFeesFile.exists()) {
+                parseFees(dynamicFees, new FileInputStream(dynamicFeesFile));
             }
-            return dynamicFees;
+            if (dynamicFees2File.exists()) {
+                parseFees(dynamicFees, new FileInputStream(dynamicFees2File));
+            }
+                
+            if (dynamicFees.isEmpty()) {
+                return staticFees;
+            } else {
+                for (final FeeCategory category : FeeCategory.values()) {
+                    if (category == FeeCategory.MS_MIN || category == FeeCategory.MS_LOW || category == FeeCategory.MS_MEDIUM || category == FeeCategory.MS_HIGH) {
+                        continue;
+                    }
+                    final Coin staticFee = staticFees.get(category);
+                    final Coin dynamicFee = dynamicFees.get(category);
+                    if (dynamicFee == null) {
+                        dynamicFees.put(category, staticFee);
+                        log.warn("Dynamic fee category missing, using static: category {}, {}/kB", category,
+                                staticFee.toFriendlyString());
+                        continue;
+                    }
+                    /*
+                    final Coin upperBound = staticFee.shiftLeft(3);
+                    if (dynamicFee.isGreaterThan(upperBound)) {
+                        dynamicFees.put(category, upperBound);
+                        log.warn("Down-adjusting dynamic fee: category {} from {}/kB to {}/kB", category,
+                                dynamicFee.toFriendlyString(), upperBound.toFriendlyString());
+                        continue;
+                    }
+                    final Coin lowerBound = staticFee.shiftRight(3);
+                    if (dynamicFee.isLessThan(lowerBound)) {
+                        dynamicFees.put(category, lowerBound);
+                        log.warn("Up-adjusting dynamic fee: category {} from {}/kB to {}/kB", category,
+                                dynamicFee.toFriendlyString(), lowerBound.toFriendlyString());
+                    }
+                    */
+                }
+                return dynamicFees;
+            }
         } catch (final IOException x) {
             // Should not happen
             throw new RuntimeException(x);
         }
     }
 
-    private static Map<FeeCategory, Coin> parseFees(final InputStream is) throws IOException {
-        final Map<FeeCategory, Coin> dynamicFees = new HashMap<>();
+    private static void parseFees(Map<FeeCategory, Coin> dynamicFees, final InputStream is) throws IOException {
         String line = null;
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.US_ASCII))) {
             while (true) {
@@ -153,7 +175,6 @@ public class DynamicFeeLiveData extends LiveData<Map<FeeCategory, Coin>> {
         } finally {
             is.close();
         }
-        return dynamicFees;
     }
 
     private static void fetchDynamicFees(final HttpUrl url, final File tempFile, final File targetFile,
@@ -199,6 +220,48 @@ public class DynamicFeeLiveData extends LiveData<Map<FeeCategory, Coin>> {
             }
         } catch (final Exception x) {
             log.warn("Problem when fetching dynamic fees rates from " + url, x);
+        }
+    }
+
+    private static void fetchDynamicFees2(final HttpUrl url, final File tempFile, final File targetFile,
+            final String userAgent) {
+        final Stopwatch watch = Stopwatch.createStarted();
+
+        final Request.Builder request = new Request.Builder();
+        request.url(url);
+        final Headers.Builder headers = new Headers.Builder();
+        headers.add("User-Agent", userAgent);
+        request.headers(headers.build());
+
+        final OkHttpClient.Builder httpClientBuilder = Constants.HTTP_CLIENT.newBuilder();
+        httpClientBuilder.connectionSpecs(Collections.singletonList(ConnectionSpec.RESTRICTED_TLS));
+        httpClientBuilder.connectTimeout(5, TimeUnit.SECONDS);
+        httpClientBuilder.writeTimeout(5, TimeUnit.SECONDS);
+        httpClientBuilder.readTimeout(5, TimeUnit.SECONDS);
+        final OkHttpClient httpClient = httpClientBuilder.build();
+        final Call call = httpClient.newCall(request.build());
+        try {
+            final Response response = call.execute();
+            final int status = response.code();
+            if (status == HttpURLConnection.HTTP_OK) {
+                final Map<String, Object> m = Json.read(response.body().string()).asMap();
+                final long minValue = 1000*(long)m.get("minimumFee");
+                final long lowValue = 1000*(long)m.get("hourFee");
+                final long mediumValue = 1000*(long)m.get("halfHourFee");
+                final long highValue = 1000*(long)m.get("fastestFee");
+                FileWriter fw = new FileWriter(tempFile);
+                fw.write("MS_MIN=" + minValue + "\nMS_LOW=" + lowValue + "\nMS_MEDIUM=" + mediumValue + "\nMS_HIGH=" + highValue + "\n");
+                fw.close();
+                if (!tempFile.renameTo(targetFile))
+                    throw new IllegalStateException("Cannot rename " + tempFile + " to " + targetFile);
+                watch.stop();
+                log.info("Dynamic fees 2 fetched from {}, took {}", url, watch);
+            } else {
+                log.warn("HTTP status {} {} when fetching dynamic fees 2 from {}", response.code(), response.message(),
+                        url);
+            }
+        } catch (final Exception x) {
+            log.warn("Problem when fetching dynamic fees 2 rates from " + url, x);
         }
     }
 }

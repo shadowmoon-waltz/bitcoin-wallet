@@ -58,7 +58,7 @@ public class SendCoinsViewModel extends AndroidViewModel {
     public State state = null;
     @Nullable
     public PaymentIntent paymentIntent = null;
-    public FeeCategory feeCategory = FeeCategory.NORMAL;
+    public FeeCategory feeCategory = FeeCategory.MS_LOW;
     @Nullable
     public AddressAndLabel validatedAddress = null;
     @Nullable

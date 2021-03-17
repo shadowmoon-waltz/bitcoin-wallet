@@ -77,9 +77,13 @@
     <string name="send_coins_fragment_hint_fee_economic">An economic fee of %s will be paid. Important: Use \'economic\' only if you don\'t care about confirmation time.</string>
     <string name="send_coins_fragment_hint_fee">A network fee of %s will be paid.</string>
     <string name="send_coins_fragment_hint_fee_priority">A priority fee of %s will be paid. If you care about low fees, use \'priority\' only if you need confirmation as soon as possible.</string>
+    <string name="send_coins_fragment_hint_fee_ms_min2">Fee: %d sats %s (%s%s) (MS Min)</string>
     <string name="send_coins_fragment_hint_fee_economic2">Fee: %d sats %s (%s%s) (Economic)</string>
     <string name="send_coins_fragment_hint_fee2">Fee: %d sats / %s (%s%s) (Normal)</string>
     <string name="send_coins_fragment_hint_fee_priority2">Fee: %d sats / %s (%s%s) (Priority)</string>
+    <string name="send_coins_fragment_hint_fee_ms_low2">Fee: %d sats %s (%s%s) (MS Low)</string>
+    <string name="send_coins_fragment_hint_fee_ms_medium2">Fee: %d sats / %s (%s%s) (MS Medium)</string>
+    <string name="send_coins_fragment_hint_fee_ms_high2">Fee: %d sats / %s (%s%s) (MS High)</string>
     <string name="send_coins_fragment_hint_dusty_send">The amount is too small to send.</string>
     <string name="send_coins_fragment_hint_insufficient_money">Not enough available coins. You\'re missing %s. This may also be due to the network fee.</string>
     <string name="send_coins_fragment_hint_empty_wallet_failed">The amount of tiny payments in your wallet doesn\'t add up to a sendable value.</string>
@@ -104,9 +108,13 @@
     <string name="send_coins_failed_msg">Failed!</string>
     <string name="send_coins_error_msg">Problem sending coins!</string>
     <string name="send_coins_options_fee_category">Fee</string>
+    <string name="send_coins_options_fee_category_ms_min">MS Min</string>
     <string name="send_coins_options_fee_category_economic">Economic</string>
     <string name="send_coins_options_fee_category_normal">Normal</string>
     <string name="send_coins_options_fee_category_priority">Priority</string>
+    <string name="send_coins_options_fee_category_ms_low">MS Low</string>
+    <string name="send_coins_options_fee_category_ms_medium">MS Med</string>
+    <string name="send_coins_options_fee_category_ms_high">MS High</string>
     <string name="send_coins_options_empty">Empty wallet</string>
     <string name="raise_fee_dialog_title">Raise network fee</string>
     <string name="raise_fee_dialog_message">Do you want to raise the network fee of this payment by %s? It will make the payment confirm quicker.</string>
