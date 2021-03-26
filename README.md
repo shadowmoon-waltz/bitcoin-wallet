@@ -16,9 +16,9 @@ and pull requests, but that's not guaranteed (I probably will if they're not too
 Main gradle build command: assembleProdRelease
 
 Small changes: build system fixes due to my version of Gradle or some other build environment reason. Not building sample
-Android 3rd party app integration example. uses my usual apk signing code. changes app name to avoid confusion with non-fork
+Android 3rd party app integration example. uses my usual apk signing code. changes app name to avoid confusion with non-fork/upstream
 bitcoin wallet. May be a bug or not, but dynamic fee data was being saved to a filename based on the static asset filename,
-not the constant value defined for the dynamic fee data filename, and was fixed.
+not the constant value defined for the dynamic fee data filename, and was fixed. Add mempool.space block explorer.
 
 The send coin button at the bottom of the main transaction screen takes up more space, because I use that more, and the scan a code
 to send button that was in the center of the bar was removed, because I don't use that much (you can still choose the camera option
@@ -30,7 +30,7 @@ are removed (in line with the earlier warning on lack of support). Disables upda
 Uses a fork of the bitcoinj library that calculate fees more accurately based on the virtual size rather than the
 actual message size (meaning fees will be the same or lower depending on whether segwit is being used). At least I believe that
 to be the case, unless I made a mistake. I forked the original repository and cherry picked changes in the master branch, as those
-changes don't seem to be in the latest release tag, which is what the non-forked Bitcoin Wallet compiled against. In addition, the
+changes don't seem to be in the latest release tag, which is what the upstream Bitcoin Wallet compiled against. In addition, the
 send coins screen displays the message size in virtual bytes and the satoshis per virtual byte fees after adding in the intended
 send amount (changes the dry run logic of the original code slightly). It also adds the fee amount in satoshis and notes the current
 fee category to the existing message.
@@ -49,8 +49,8 @@ the average virtual byte transaction size if using segwit (140 virtual bytes).
 Changed default send coins screen default fee category from normal to ms low, sweep wallet feature fee category from normal to ms low, and
 raise fee feature fee category from priority to ms high.
 
-tl;dr changes: small build changes, small ui changes, reduce fee overpaying in some common cases, mempool.space fee categories, enhanced fee
-preview alongside fee categories, and changes to default fee category (usually reduces fees)
+tl;dr changes: small build changes, small ui changes, reduce fee overpaying in some common cases, mempool.space fee categories and block
+explorer, enhanced fee preview alongside fee categories, and changes to default fee category (usually reduces fees relative to upstream)
 
 Using release signing based on "gradle.properties" in your gradle config directory (which usually defaults to "~/.gradle").
 Add the following lines to that file `
