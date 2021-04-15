@@ -17,6 +17,7 @@
 
 package de.schildbach.wallet;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
@@ -70,6 +71,8 @@ public class Configuration {
     private static final String PREFS_KEY_LAST_ENCRYPT_KEYS = "last_encrypt_keys";
     private static final String PREFS_KEY_LAST_BLOCKCHAIN_RESET = "last_blockchain_reset";
     private static final String PREFS_KEY_LAST_BLUETOOTH_ADDRESS = "last_bluetooth_address";
+
+    private static final String PREFS_KEY_WIDGET_ENABLED = "widget_enabled";
 
     private static final int PREFS_DEFAULT_BTC_SHIFT = 3;
     private static final int PREFS_DEFAULT_BTC_PRECISION = 2;
@@ -333,5 +336,17 @@ public class Configuration {
 
     public void unregisterOnSharedPreferenceChangeListener(final OnSharedPreferenceChangeListener listener) {
         prefs.unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+    public boolean getWidgetEnabled() {
+        return prefs.getBoolean(PREFS_KEY_WIDGET_ENABLED, false);
+    }
+
+    public void setWidgetEnabled(final Context context, final boolean widgetEnabled) {
+        final boolean valueChanged = (getWidgetEnabled() != widgetEnabled);
+        prefs.edit().putBoolean(PREFS_KEY_WIDGET_ENABLED, widgetEnabled).apply();
+        if (valueChanged) {
+            WalletBalanceWidgetProvider.UpdateAllWidgets(context);
+        }
     }
 }

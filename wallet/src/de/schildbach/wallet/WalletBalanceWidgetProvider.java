@@ -59,6 +59,31 @@ public class WalletBalanceWidgetProvider extends AppWidgetProvider {
 
     private static final Logger log = LoggerFactory.getLogger(WalletBalanceWidgetProvider.class);
 
+    public static void UpdateAllWidgets(final Context context) {
+        final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        final ComponentName providerName = new ComponentName(context, WalletBalanceWidgetProvider.class);
+
+        try {
+            final int[] appWidgetIds = appWidgetManager.getAppWidgetIds(providerName);
+            log.warn("got some app widgets " + appWidgetIds.length);
+            if (appWidgetIds.length > 0) {
+                AsyncTask.execute(() -> {
+                    final WalletApplication application = (WalletApplication) context.getApplicationContext();
+                    final Coin balance = application.getWallet().getBalance(BalanceType.ESTIMATED);
+                    final Configuration config = application.getConfiguration();
+                    final ExchangeRatesRepository exchangeRatesRepository = ExchangeRatesRepository.get(application);
+                    final ExchangeRateEntry exchangeRate = exchangeRatesRepository != null ?
+                            exchangeRatesRepository.exchangeRateDao().findByCurrencyCode(config.getExchangeCurrencyCode()) : null;
+                    updateWidgets(context, appWidgetManager, appWidgetIds, balance, exchangeRate != null ?
+                            exchangeRate.exchangeRate() : null);
+                });
+            }
+        } catch (final RuntimeException x) // system server dead?
+        {
+            log.warn("cannot update app widgets", x);
+        }
+    }
+
     @Override
     public void onUpdate(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
         final PendingResult result = goAsync();
@@ -126,11 +151,13 @@ public class WalletBalanceWidgetProvider extends AppWidgetProvider {
         final Configuration config = application.getConfiguration();
         final MonetaryFormat btcFormat = config.getFormat();
 
-        final Spannable balanceStr = new MonetarySpannable(btcFormat.noCode(), balance).applyMarkup(null,
+        final boolean widgetEnabled = config.getWidgetEnabled();
+
+        final Spannable balanceStr = new MonetarySpannable(btcFormat.noCode(), widgetEnabled ? balance : Coin.ZERO).applyMarkup(null,
                 MonetarySpannable.STANDARD_INSIGNIFICANT_SPANS);
         final Spannable localBalanceStr;
         if (exchangeRate != null) {
-            final Fiat localBalance = exchangeRate.coinToFiat(balance);
+            final Fiat localBalance = widgetEnabled ? exchangeRate.coinToFiat(balance) : Fiat.valueOf("USD", 0);
             final MonetaryFormat localFormat = Constants.LOCAL_FORMAT.code(0,
                     Constants.PREFIX_ALMOST_EQUAL_TO + GenericUtils.currencySymbol(exchangeRate.fiat.currencyCode));
             final Object[] prefixSpans = new Object[] { MonetarySpannable.SMALLER_SPAN,
@@ -146,7 +173,7 @@ public class WalletBalanceWidgetProvider extends AppWidgetProvider {
         final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.wallet_balance_widget_content);
 
         final String currencyCode = btcFormat.code();
-        if (MonetaryFormat.CODE_BTC.equals(currencyCode))
+        if (!widgetEnabled || MonetaryFormat.CODE_BTC.equals(currencyCode))
             views.setImageViewResource(R.id.widget_wallet_prefix, R.drawable.currency_symbol_btc);
         else if (MonetaryFormat.CODE_MBTC.equals(currencyCode))
             views.setImageViewResource(R.id.widget_wallet_prefix, R.drawable.currency_symbol_mbtc);
@@ -173,6 +200,12 @@ public class WalletBalanceWidgetProvider extends AppWidgetProvider {
                 PendingIntent.getActivity(context, 0, new Intent(context, SendCoinsActivity.class), 0));
         views.setOnClickPendingIntent(R.id.widget_button_send_qr,
                 PendingIntent.getActivity(context, 0, new Intent(context, SendCoinsQrActivity.class), 0));
+
+        views.setOnClickPendingIntent(R.id.widget_disabled_message,
+                PendingIntent.getActivity(context, 0, new Intent(context, WalletActivity.class), 0));
+
+        views.setViewVisibility(R.id.widget_main_content, widgetEnabled ? View.VISIBLE : View.GONE);
+        views.setViewVisibility(R.id.widget_disabled_message, !widgetEnabled ? View.VISIBLE : View.GONE);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

@@ -58,6 +58,11 @@
                 android:showAsAction="never"
                 android:title="@string/encrypt_keys_dialog_title"
                 android:visible="false" />
+            <item
+                android:id="@+id/wallet_options_widget_enabled"
+                android:showAsAction="never"
+                android:title="Enable Widget"
+                android:checkable="true" />
         </menu>
     </item>
     <item

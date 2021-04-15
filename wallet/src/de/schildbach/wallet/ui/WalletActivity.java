@@ -383,6 +383,9 @@ public final class WalletActivity extends AbstractWalletActivity {
 
         final Resources res = getResources();
 
+        final Configuration config = application.getConfiguration();
+        menu.findItem(R.id.wallet_options_widget_enabled).setChecked(config != null && config.getWidgetEnabled());
+            
         final boolean showExchangeRatesOption = Constants.ENABLE_EXCHANGE_RATES
                 && res.getBoolean(R.bool.show_exchange_rates_option);
         menu.findItem(R.id.wallet_options_exchange_rates).setVisible(showExchangeRatesOption);
@@ -457,6 +460,14 @@ public final class WalletActivity extends AbstractWalletActivity {
         //    return true;
         } else if (itemId == R.id.wallet_options_help) {
             viewModel.showHelpDialog.setValue(new Event<>(R.string.help_wallet));
+            return true;
+        } else if (itemId == R.id.wallet_options_widget_enabled) {
+            final Configuration config = application.getConfiguration();
+            if (config != null) {
+                final boolean isChecked = !item.isChecked();
+                config.setWidgetEnabled(this, isChecked);
+                item.setChecked(isChecked);
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
