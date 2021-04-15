@@ -36,10 +36,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
 }
 
-ext {
-    archivesBaseName = 'bitcoin-wallet'
-}
-
 boolean signConfigExists = project.hasProperty("keystoreFile") &&
                            project.hasProperty("keystorePassword") &&
                            project.hasProperty("keystoreAlias") &&
@@ -67,6 +63,8 @@ android {
         dexOptions {
             preDexLibraries false
         }
+        // https://www.tanelikorri.com/tutorial/android/set-apk-filename-in-gradle/
+        setProperty('archivesBaseName', 'bitcoin-wallet')
     }
 
     buildTypes {
