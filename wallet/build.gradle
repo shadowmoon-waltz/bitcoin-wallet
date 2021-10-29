@@ -42,19 +42,19 @@ boolean signConfigExists = project.hasProperty("keystoreFile") &&
                            project.hasProperty("keystoreAliasPassword")
 
 android {
-  if (signConfigExists) {
-    signingConfigs {
-      release {
-        storeFile file(project.property("keystoreFile"))
-        storePassword project.property("keystorePassword")
-        keyAlias project.property("keystoreAlias")
-        keyPassword project.property("keystoreAliasPassword")
-      }
+    if (signConfigExists) {
+        signingConfigs {
+          release {
+              storeFile file(project.property("keystoreFile"))
+              storePassword project.property("keystorePassword")
+              keyAlias project.property("keystoreAlias")
+              keyPassword project.property("keystoreAliasPassword")
+          }
+        }
     }
-  }
 
-    compileSdkVersion 30
-    buildToolsVersion '29.0.2'
+    compileSdkVersion 'android-30'
+    buildToolsVersion '30.0.3'
 
     defaultConfig {
         applicationId 'de.schildbach'
