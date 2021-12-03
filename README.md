@@ -61,6 +61,9 @@ keystoreAlias=<key alias>
 keystoreAliasPassword=<key password>
 `
 
+Since the upstream commits upgrading the target sdk version, I was having some issues sending payments. This may have been an issue with
+something in my fork or network, so it may just be me, but worth noting.
+
 ---
 
 # BITCOIN WALLET
