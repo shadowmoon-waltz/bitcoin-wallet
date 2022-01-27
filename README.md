@@ -28,10 +28,11 @@ on the send coins screen). Shortened request coins to request, since I don't use
 The original bitcoin wallet's crash detection and suggestion to report, as well as the report an issue button on each transaction,
 are removed (in line with the earlier warning on lack of support). Disables update check too.
 
-Uses a fork of the bitcoinj library that calculate fees more accurately based on the virtual size rather than the
+~~Uses a fork of the bitcoinj library that calculate fees more accurately based on the virtual size rather than the
 actual message size (meaning fees will be the same or lower depending on whether segwit is being used). At least I believe that
 to be the case, unless I made a mistake. I forked the original repository and cherry picked changes in the master branch, as those
-changes don't seem to be in the latest release tag, which is what the upstream Bitcoin Wallet compiled against. In addition, the
+changes don't seem to be in the latest release tag, which is what the upstream Bitcoin Wallet compiled against. (upstream has now
+upgraded to a bitcoinj release with these changes)~~ In addition, the
 send coins screen displays the message size in virtual bytes and the satoshis per virtual byte fees after adding in the intended
 send amount (changes the dry run logic of the original code slightly). It also adds the fee amount in satoshis and notes the current
 fee category to the existing message.
