@@ -6,11 +6,12 @@ Changes will be described in this section; other sections are from original read
 The license is unchanged (GPLv3 License). Note that I used and added to the repository the single file mjson library,
 which is released under the Apache License 2.0.
 
-Note that this fork is mainly for my own use, so support from me may be minimal. Please do not report issues to the the original
-developer of bitcoin wallet (who is not affiliated with me or this fork). I added in features I needed, and I did not do extensive
-testing. While I think it works and I don't want anyone to lose crypto, per the license, neither of us are liable for anything that
-happens as a result of using this software, there is no warranty, and so on. The original reason for the fork was to save money by
-pulled in segwit changes from the bitcoinj then-post-release branch. I may still take issues and pull requests, time permitting.
+Note that this fork is mainly for my own use, so support from me may be minimal. This fork is not affiliated with the upstream
+project. I may still take issues and pull requests, time permitting. Please confirm issues or pull requests pertain specifically
+to the fork and not the upstream project. If it pertains to the fork, report/pull request here. If it relates to upstream, it
+should be reproduced/pull requested against the upstream project and reported/pull requested to that project. I added in features
+I needed, and I did not do extensive testing. While I think it works and I don't want anyone to lose crypto, per the license,
+neither of us are liable for anything that happens as a result of using this software, there is no warranty, and so on.
 
 Main gradle build command: assembleProdRelease
 
@@ -25,14 +26,15 @@ to send button that was in the center of the bar was removed, because I don't us
 on the send coins screen). Shortened request coins to request, since I don't use it that much and it takes up less space.
 
 The original bitcoin wallet's crash detection and suggestion to report, as well as the report an issue button on each transaction,
-are removed (in line with the earlier warning on lack of support). Disables update check too.
+are removed (in line with the earlier warning on minimal support). Disables update check too.
 
-~~Uses a fork of the bitcoinj library that calculate fees more accurately based on the virtual size rather than the
-actual message size (meaning fees will be the same or lower depending on whether segwit is being used). At least I believe that
-to be the case, unless I made a mistake. I forked the original repository and cherry picked changes in the master branch, as those
-changes don't seem to be in the latest release tag, which is what the upstream Bitcoin Wallet compiled against. (upstream has now
-upgraded to a bitcoinj release with these changes)~~ In addition, the
-send coins screen displays the message size in virtual bytes and the satoshis per virtual byte fees after adding in the intended
+~~The original reason for the fork was to save money by pulling in segwit changes from the bitcoinj then-post-release branch.
+From what I understand, these changes calculate fees more accurately based on the virtual size rather than the actual message size (so
+fees will be the same or lower depending if segwit is used). I forked the original repository and cherry picked changes in the master
+branch, as those changes weren't in the then-latest release tag, which is what the upstream Bitcoin Wallet was compiled against. (upstream
+has now upgraded to a bitcoinj release with these changes)~~
+
+The send coins screen displays the message size in virtual bytes and the satoshis per virtual byte fees after adding in the intended
 send amount (changes the dry run logic of the original code slightly). It also adds the fee amount in satoshis and notes the current
 fee category to the existing message.
 
@@ -51,7 +53,7 @@ Changed default send coins screen default fee category from normal to ms low, sw
 raise fee feature fee category from priority to ms high.
 
 tl;dr changes: small build changes, small ui changes, mempool.space fee categories, enhanced fee preview alongside fee categories, and
-changes to default fee category (usually reduces fees relative to upstream) ~~formerly uses segwit changes to reduce fee overpaying in some common cases~~
+changes to default fee category (usually reduces fees relative to upstream) ~~formerly reduces fee overpaying with segwit unlike previous upstream project in some common cases~~
 
 Using release signing based on "gradle.properties" in your gradle config directory (which usually defaults to "~/.gradle").
 Add the following lines to that file `
