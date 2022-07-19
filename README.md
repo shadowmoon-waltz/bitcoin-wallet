@@ -6,12 +6,11 @@ Changes will be described in this section; other sections are from original read
 The license is unchanged (GPLv3 License). Note that I used and added to the repository the single file mjson library,
 which is released under the Apache License 2.0.
 
-Note that this fork is mainly for my own use, so there will likely be near zero support from me and there will be zero support
-from the original developer of bitcoin wallet (who is not affiliated with me or this fork). I added in features I needed, and
-I did not do extensive testing. Neither of us are going to be liable for anything that happens from using this software, there
-is no warranty, and so on. The license states that, but I really don't want anyone losing money by using this software, as that
-would be sad. The changes I pulled in from bitcoinj post-release branch will hopefully save people money. I may still take issues
-and pull requests, but that's not guaranteed (I probably will if they're not too much work, but I don't want to commit right now).
+Note that this fork is mainly for my own use, so support from me may be minimal. Please do not report issues to the the original
+developer of bitcoin wallet (who is not affiliated with me or this fork). I added in features I needed, and I did not do extensive
+testing. While I think it works and I don't want anyone to lose crypto, per the license, neither of us are liable for anything that
+happens as a result of using this software, there is no warranty, and so on. The original reason for the fork was to save money by
+pulled in segwit changes from the bitcoinj then-post-release branch. I may still take issues and pull requests, time permitting.
 
 Main gradle build command: assembleProdRelease
 
@@ -51,8 +50,8 @@ the average virtual byte transaction size if using segwit (140 virtual bytes).
 Changed default send coins screen default fee category from normal to ms low, sweep wallet feature fee category from normal to ms low, and
 raise fee feature fee category from priority to ms high.
 
-tl;dr changes: small build changes, small ui changes, reduce fee overpaying in some common cases, mempool.space fee categories, enhanced
-fee preview alongside fee categories, and changes to default fee category (usually reduces fees relative to upstream)
+tl;dr changes: small build changes, small ui changes, mempool.space fee categories, enhanced fee preview alongside fee categories, and
+changes to default fee category (usually reduces fees relative to upstream) ~~formerly uses segwit changes to reduce fee overpaying in some common cases~~
 
 Using release signing based on "gradle.properties" in your gradle config directory (which usually defaults to "~/.gradle").
 Add the following lines to that file `
