@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="de.schildbach.wallet"
     android:installLocation="internalOnly"
-    android:versionCode="903"
-    android:versionName="9.03">
+    android:versionCode="921"
+    android:versionName="9.21">
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -21,9 +21,11 @@
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <!-- dangerous permissions -->
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- group: CAMERA -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
@@ -60,6 +62,21 @@
         android:smallScreens="true"
         android:xlargeScreens="true" />
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" android:host="wallet.schildbach.de" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" android:host="f-droid.org" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" android:host="play.google.com" />
+        </intent>
+    </queries>
+
     <application
         android:name="de.schildbach.wallet.WalletApplication"
         android:hasFragileUserData="true"
@@ -77,6 +94,7 @@
             android:theme="@style/My.Theme.WithSplash" />
         <activity-alias
             android:name="de.schildbach.wallet.WalletActivity"
+            android:exported="true"
             android:targetActivity="de.schildbach.wallet.ui.WalletActivity">
             <intent-filter android:label="@string/app_name_short">
                 <action android:name="android.intent.action.MAIN" />
@@ -95,6 +113,7 @@
         <activity
             android:name="de.schildbach.wallet.ui.send.SendCoinsActivity"
             android:configChanges="keyboard|keyboardHidden"
+            android:exported="true"
             android:label="@string/send_coins_activity_title"
             android:theme="@style/My.Theme.ChildActivity"
             android:windowSoftInputMode="adjustResize">
@@ -173,6 +192,7 @@
         <activity
             android:name="de.schildbach.wallet.ui.backup.RestoreWalletFromExternalActivity"
             android:configChanges="orientation|keyboard|keyboardHidden"
+            android:exported="true"
             android:theme="@style/My.Theme.Dialog">
             <intent-filter android:label="@string/import_keys_intent_filter_action">
                 <action android:name="android.intent.action.VIEW" />
@@ -225,7 +245,8 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name="de.schildbach.wallet.service.BlockchainService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
 
         <service
             android:name="de.schildbach.wallet.offline.AcceptBluetoothService"
@@ -245,4 +266,8 @@
             android:name="android.nfc.disable_beam_default"
             android:value="true" />
     </application>
+
+    <!-- remove unnecessary merged nodes -->
+    <permission android:name="${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" tools:node="remove" />
+    <uses-permission android:name="${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" tools:node="remove" />
 </manifest>
