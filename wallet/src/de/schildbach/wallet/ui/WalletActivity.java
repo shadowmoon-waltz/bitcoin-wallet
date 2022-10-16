@@ -307,7 +307,7 @@ public final class WalletActivity extends AbstractWalletActivity {
                 } else if (itemId == R.id.wallet_options_widget_enabled) {
                     final Configuration config = application.getConfiguration();
                     final boolean isChecked = !item.isChecked();
-                    config.setWidgetEnabled(this, isChecked);
+                    config.setWidgetEnabled(WalletActivity.this, isChecked);
                     item.setChecked(isChecked);
                     return true;
                 }

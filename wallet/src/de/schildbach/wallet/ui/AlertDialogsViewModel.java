@@ -73,8 +73,8 @@ public class AlertDialogsViewModel extends AndroidViewModel {
     public final MutableLiveData<Event<String>> showSettingsFailedDialog = new MutableLiveData<>();
     public final MutableLiveData<Event<Void>> showTooMuchBalanceAlertDialog = new MutableLiveData<>();
 
-    private final ExecutorService executor = Executors.newSingleThreadExecutor(
-            new ContextPropagatingThreadFactory("query-versions"));
+    private final ExecutorService executor = (Constants.VERSION_URL != null) ? Executors.newSingleThreadExecutor(
+            new ContextPropagatingThreadFactory("query-versions")) : null;
 
     private static final Logger log = LoggerFactory.getLogger(AlertDialogsViewModel.class);
 
@@ -88,6 +88,10 @@ public class AlertDialogsViewModel extends AndroidViewModel {
 
     @MainThread
     private void process() {
+        if (Constants.VERSION_URL == null) {
+            return;
+        }
+
         final PackageInfo packageInfo = application.packageInfo();
         final HttpUrl.Builder url = Constants.VERSION_URL.newBuilder();
         url.addEncodedQueryParameter("package", packageInfo.packageName);

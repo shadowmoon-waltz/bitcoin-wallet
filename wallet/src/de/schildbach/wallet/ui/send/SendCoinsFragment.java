@@ -368,7 +368,7 @@ public final class SendCoinsFragment extends Fragment {
         }
         viewModel.dynamicFees.observe(this, dynamicFees -> {
             updateFeesInMenu(dynamicFees);
-            updateView()
+            updateView();
         });
         viewModel.feeCategory.observe(this, feeCategory -> updateView());
         application.blockchainState.observe(this, blockchainState -> updateView());
@@ -434,7 +434,7 @@ public final class SendCoinsFragment extends Fragment {
                 else if (feeCategory == FeeCategory.PRIORITY)
                     menu.findItem(R.id.send_coins_options_fee_category_priority).setChecked(true);
 
-                this.menu = menu;
+                SendCoinsFragment.this.menu = menu;
 
                 if (viewModel.dynamicFees != null) {
                     updateFeesInMenu(viewModel.dynamicFees.getValue());
