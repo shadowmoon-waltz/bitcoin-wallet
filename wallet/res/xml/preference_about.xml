@@ -104,5 +104,13 @@
                 android:action="android.intent.action.VIEW"
                 android:data="https://github.com/qos-ch/slf4j" />
         </Preference>
+        <Preference
+            android:key="about_credits_mjson"
+            android:summary="https://github.com/bolerio/mjson"
+            android:title="@string/about_credits_mjson_title">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/bolerio/mjson" />
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

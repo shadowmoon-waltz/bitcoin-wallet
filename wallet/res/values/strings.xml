@@ -330,6 +330,7 @@
     <string name="about_credits_moshi_title">Moshi, a JSON library</string>
     <string name="about_credits_guava_title">Guava, a collection of useful helpers</string>
     <string name="about_credits_slf4j_title">SLF4J, a logging framework</string>
+    <string name="about_credits_mjson_title">mjson, a small json library</string>
     <string name="about_market_app_title">%s page</string>
     <string name="about_market_app_summary">Review or rate the app</string>
     <string name="about_faq_title">FAQ</string>

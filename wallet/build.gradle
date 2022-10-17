@@ -53,13 +53,11 @@ android {
         }
     }
 
-    compileSdkVersion 'android-33'
+    compileSdkVersion 'android-31'
     buildToolsVersion '33.0.0'
 
     defaultConfig {
         applicationId 'de.schildbach'
-        minSdkVersion 14
-        targetSdkVersion 33
         dexOptions {
             preDexLibraries false
         }
