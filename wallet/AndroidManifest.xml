@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="de.schildbach.wallet"
     android:installLocation="internalOnly"
-    android:versionCode="921"
-    android:versionName="9.21">
+    android:versionCode="922"
+    android:versionName="9.22">
 
     <uses-sdk
         android:minSdkVersion="24"
-        android:targetSdkVersion="30"
+        android:targetSdkVersion="31"
         tools:ignore="OldTargetApi" />
 
     <!-- normal permissions -->
