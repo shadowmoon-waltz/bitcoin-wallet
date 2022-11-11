@@ -50,7 +50,6 @@ import de.schildbach.wallet.util.CrashReporter;
 import de.schildbach.wallet.util.Toast;
 import de.schildbach.wallet.util.WalletUtils;
 import org.bitcoinj.core.VersionMessage;
-import org.bitcoinj.crypto.LinuxSecureRandom;
 import org.bitcoinj.crypto.MnemonicCode;
 import org.bitcoinj.utils.ContextPropagatingThreadFactory;
 import org.bitcoinj.utils.Threading;
@@ -88,13 +87,14 @@ public class WalletApplication extends Application {
 
     private static final Logger log = LoggerFactory.getLogger(WalletApplication.class);
 
+    public WalletApplication() {
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectAll().permitDiskReads().permitDiskWrites().penaltyLog().build());
+    }
+
     @Override
     public void onCreate() {
-        new LinuxSecureRandom(); // init proper random number generator
-
         Logging.init(getFilesDir());
-
-        initStrictMode();
 
         Threading.throwOnLockCycles();
         org.bitcoinj.core.Context.enableStrictMode();
@@ -279,11 +279,6 @@ public class WalletApplication extends Application {
                 file.delete();
             }
         }
-    }
-
-    public static void initStrictMode() {
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().permitDiskReads()
-                .permitDiskWrites().penaltyLog().build());
     }
 
     private void initNotificationManager() {
