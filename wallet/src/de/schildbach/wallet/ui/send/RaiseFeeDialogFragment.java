@@ -135,6 +135,7 @@ public class RaiseFeeDialogFragment extends DialogFragment {
                 // We basically have to pay fee for two transactions:
                 // The transaction to raise the fee of and the CPFP transaction we're about to create.
                 final int size = transaction.getMessageSize() + 192;
+                // SW : use MS_HIGH for fee bump category
                 // consider allowing user to select new fee
                 feeRaise = dynamicFees.get(FeeCategory.MS_HIGH).multiply(size).divide(1000);
                 updateView();
@@ -323,9 +324,10 @@ public class RaiseFeeDialogFragment extends DialogFragment {
         if (WalletUtils.isPayToManyTransaction(transaction))
             return false;
 
+        // SW assume spendable output; if not, at worse, the raise fee dialog fragment will say can't raise
         // We don't know dynamic fees here, so we need to guess.
-        if (findSpendableOutput(wallet, transaction, Transaction.DEFAULT_TX_FEE) == null)
-            return false;
+        //if (findSpendableOutput(wallet, transaction, Transaction.DEFAULT_TX_FEE) == null)
+        //    return false;
 
         return true;
     }

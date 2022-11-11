@@ -43,7 +43,7 @@ MS Medium, and MS High), which correspond to lowest fee to avoid being ignored i
 Economic fee category), confirmed within one hour, confirmed within 30 minutes, and confirmed as soon as possible, respectively.
 Overall, these numbers seem to update faster and are often lower or the same (with the exception of MS Min) than the existing
 Medium fee category. The original fee categories, Economic, Normal, and Priority, are still in this fork (and are also dynamic, but they
-may update less).
+may update less). Note that the mempool.space values fluctuate often and are sometimes too low, so always double-check whether the values seem reasonable.
 
 Added ability to preview the fee amount in the fee category menu options (they load in when opening send coins, so you might have to wait
 a few seconds before they'll show up); it includes the satoshis per virtual byte cost and the approximate local currency amount based on
@@ -51,6 +51,8 @@ the average virtual byte transaction size if using segwit (140 virtual bytes).
 
 Changed default send coins screen default fee category from normal to ms low, sweep wallet feature fee category from normal to ms low, and
 raise fee feature fee category from priority to ms high.
+
+The dynamic fee category used for fee raise has been changed to mempool.space high. Don't check if you have available funds for fee raise against static default tx fee when determining if the transaction fee raise option is possible for transactions in the transaction list. Like upstream, it will still check the fee against the dynamic fees when you actually click the option to try.
 
 tl;dr changes: small build changes, small ui changes, mempool.space fee categories, enhanced fee preview alongside fee categories, and
 changes to default fee category (usually reduces fees relative to upstream) ~~formerly reduces fee overpaying with segwit unlike previous upstream project in some common cases~~
